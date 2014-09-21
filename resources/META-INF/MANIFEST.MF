@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: jline-2.12.jar jsoup-1.7.3.jar json-20140107.jar
+Main-Class: main.Main
+

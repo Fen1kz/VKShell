@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ivy-module version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info organisation="fen" module="VKShell"/>
+
+    <configurations>
+        <conf name="default" description="for runtime"/>
+        <conf name="compile"/>
+        <conf name="test"/>
+    </configurations>
+
+    <dependencies defaultconf="default->default">
+        <dependency org="org.jsoup" name="jsoup" rev="1.7.3"/>
+        <dependency org="jline" name="jline" rev="2.12"/>
+        <dependency org="org.json" name="json" rev="20140107"/>
+
+        <dependency org="junit" name="junit" rev="4.8+" conf="test->default"/>
+        <dependency org="org.mockito" name="mockito-all" rev="1.8.5" conf="test->default"/>
+    </dependencies>
+</ivy-module>
