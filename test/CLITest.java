@@ -1,7 +1,7 @@
 package test;
 
 import app.App;
-import main.CLI;
+import main.cli.CLI;
 import org.junit.Test;
 
 import java.io.*;

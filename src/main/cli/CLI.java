@@ -1,4 +1,4 @@
-package main;
+package main.cli;
 
 import jline.TerminalFactory;
 import jline.console.ConsoleReader;

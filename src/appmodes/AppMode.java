@@ -1,6 +1,6 @@
 package appmodes;
 
-import main.CLI;
+import main.cli.CLI;
 import appmodes.interfaces.IAppMode;
 
 import java.io.IOException;

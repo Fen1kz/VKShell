@@ -23,7 +23,7 @@ public class Logger {
             this.level = level;
         }
     }
-
+/*
     public void print(String msg) {
         print(msg, Level.getByInt(App.get().config().getInt(Config.key.LOG_LEVEL_DEFAULT)));
     }
@@ -50,5 +50,5 @@ public class Logger {
 
     public void log(String msg, Level level) {
         App.get().config().getFile(Config.key.LOG_FILE);
-    }
+    }*/
 }

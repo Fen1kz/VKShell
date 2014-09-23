@@ -1,7 +1,7 @@
 package appmodes.SubModes;
 
-import main.CLI;
 import appmodes.SubMode;
+import main.cli.CLI;
 
 public class IMMode extends SubMode {
     public IMMode(CLI cli) {
@@ -11,9 +11,7 @@ public class IMMode extends SubMode {
     @Override
     protected void init() {
         super.init();
-        registerCommands(
-                //ListCmd.class
-        );
+        registerCommands();
     }
 
     @Override

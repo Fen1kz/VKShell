@@ -1,6 +1,6 @@
 package appmodes.interfaces;
 
-import main.CLI;
+import main.cli.CLI;
 
 public interface IAppMode {
     public CLI getCLI();

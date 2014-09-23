@@ -4,7 +4,7 @@ import commands.core.AOption;
 import commands.core.Command;
 import commands.core.CommandArgs;
 import app.App;
-import main.CLI;
+import main.cli.CLI;
 
 public class StartCmd extends Command {
     @AOption(names = {"config"}, desc = "")

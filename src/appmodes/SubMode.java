@@ -1,7 +1,7 @@
 package appmodes;
 
 import commands.Global.BackCmd;
-import main.CLI;
+import main.cli.CLI;
 
 public abstract class SubMode extends AppModeWithCommands {
     public SubMode(CLI cli) {

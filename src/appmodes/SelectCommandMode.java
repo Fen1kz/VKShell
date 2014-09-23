@@ -3,7 +3,7 @@ package appmodes;
 import commands.core.CommandParser;
 import commands.core.ICommand;
 import commands.core.exceptions.UnknownCommandException;
-import main.CLI;
+import main.cli.CLI;
 import appmodes.interfaces.IAppModeWithCommands;
 
 import java.util.Map;
@@ -29,11 +29,11 @@ public class SelectCommandMode extends AppMode implements IAppModeWithCommands {
 
     public String getPrompt() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Found multiple commands, choose one (type number or command): \n");
+        sb.append("Found multiple commands, choose one (type number or command): ");
         int i = 0;
         for (Map.Entry<String, Class<? extends ICommand>> entry : commandMap.entrySet()) {
             ++i;
-            sb.append(i + ") " + entry.getKey() + "\n");
+            sb.append(i + ") " + entry.getKey());
         }
         return sb.toString();
     }

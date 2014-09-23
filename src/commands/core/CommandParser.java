@@ -1,8 +1,8 @@
 package commands.core;
 
-import commands.core.exceptions.UnknownCommandException;
-import appmodes.interfaces.IAppModeWithCommands;
 import appmodes.SelectCommandMode;
+import appmodes.interfaces.IAppModeWithCommands;
+import commands.core.exceptions.UnknownCommandException;
 
 import java.util.*;
 import java.util.regex.Matcher;

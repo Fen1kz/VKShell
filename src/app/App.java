@@ -6,7 +6,7 @@ import api.auth.IAuthoriser;
 import api.auth.VkAccessToken;
 import commands.DefaultMode.AuthCmd;
 import commands.core.CommandParser;
-import main.CLI;
+import main.cli.CLI;
 import appmodes.DefaultMode;
 
 import java.io.*;
