@@ -4,14 +4,14 @@ import commands.DefaultMode.AuthCmd;
 import commands.DefaultMode.IMCmd;
 import commands.core.CommandParser;
 import commands.core.ICommand;
-import main.cli.CLI;
+import main.cli.ICLI;
 
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class DefaultMode extends AppModeWithCommands {
-    public DefaultMode(CLI cli) {
+    public DefaultMode(ICLI cli) {
         super(cli);
     }
 

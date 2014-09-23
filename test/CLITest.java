@@ -1,7 +1,7 @@
 package test;
 
 import app.App;
-import main.cli.CLI;
+import main.cli.ICLI;
 import org.junit.Test;
 
 import java.io.*;
@@ -28,7 +28,7 @@ public class CLITest {
         test.writeLine("audio");
         test.writeLine("list -l 3");
 
-        CLI cli = new CLI(new ByteArrayInputStream(test.get().getBytes(StandardCharsets.UTF_8)));
+        ICLI cli = new ICLI(new ByteArrayInputStream(test.get().getBytes(StandardCharsets.UTF_8)));
         cli.echo = true;
         App.get().start(cli);
     }

@@ -1,10 +1,10 @@
 package appmodes.SubModes;
 
 import appmodes.SubMode;
-import main.cli.CLI;
+import main.cli.ICLI;
 
 public class IMMode extends SubMode {
-    public IMMode(CLI cli) {
+    public IMMode(ICLI cli) {
         super(cli);
     }
 

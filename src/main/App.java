@@ -8,14 +8,14 @@ import commands.DefaultMode.AuthCmd;
 import commands.Global.EchoCmd;
 import commands.core.CommandParser;
 import appmodes.DefaultMode;
-import main.cli.CLI;
+import main.cli.ICLI;
 
 import java.io.*;
 
 public class App {
     // Singleton
     private static App instance = new App();
-    private CLI cli;
+    private ICLI cli;
     private VkAccessToken token = null;
 
     private App() {
@@ -27,12 +27,12 @@ public class App {
         return instance;
     }
 
-    public void start(CLI cli) {
+    public void start(ICLI cli) {
         this.cli = cli;
         new DefaultMode(cli).start();
     }
 
-    public CLI getCLI() {
+    public ICLI getCLI() {
         return cli;
     }
 

@@ -6,8 +6,10 @@ import api.auth.IAuthoriser;
 import api.auth.VkAccessToken;
 import commands.DefaultMode.AuthCmd;
 import commands.core.CommandParser;
-import main.cli.CLI;
+import main.cli.ICLI;
 import appmodes.DefaultMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
@@ -29,13 +31,13 @@ public class App {
 
     // Singleton
     private static App instance = new App();
-    private CLI cli;
+    private ICLI cli;
     private VkAccessToken token = null;
-    private Logger logger;
-    private Config config;
+    private final Logger logger;
+    private final Config config;
 
     private App() {
-        this.logger = new Logger();
+        this.logger = LogManager.getLogger("HelloWorld");
         this.config = new Config();
     }
 
@@ -45,7 +47,7 @@ public class App {
         return instance;
     }
 
-    public CLI cli() {
+    public ICLI cli() {
         return cli;
     }
 
@@ -57,7 +59,7 @@ public class App {
         return config;
     }
 
-    public void start(CLI cli) {
+    public void start(ICLI cli) {
         this.cli = cli;
         new DefaultMode(cli).start();
     }
@@ -83,7 +85,7 @@ public class App {
             } catch (ClassNotFoundException e) {
                 // ignore
             } catch (IOException e) {
-                App.get().logger().println(e.getMessage(), Logger.Level.ERROR);
+                App.get().logger().error(e);
             }
         }
         return token;
@@ -103,9 +105,9 @@ public class App {
                     stream.close();
                 }
             } catch (IOException e) {
-                App.get().logger().println(e.getMessage(), Logger.Level.ERROR);
+                App.get().logger().error("Setting token file error", e);
             } catch (IllegalStateException e) {
-                App.get().logger().println(e.getMessage(), Logger.Level.ERROR);
+                App.get().logger().error("Setting token file error", e);
             }
         }
     }

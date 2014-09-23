@@ -1,6 +1,6 @@
 package app;
 
-public class Logger {
+public class LoggerX {
 
     public static enum Level {
         DEBUG(0),

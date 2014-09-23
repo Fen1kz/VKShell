@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-public class JLine2CLI {
+public class JLine2CLI implements ICLI {
     public boolean echo = false;
     private ConsoleReader console;
 

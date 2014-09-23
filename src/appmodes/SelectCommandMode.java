@@ -3,7 +3,7 @@ package appmodes;
 import commands.core.CommandParser;
 import commands.core.ICommand;
 import commands.core.exceptions.UnknownCommandException;
-import main.cli.CLI;
+import main.cli.ICLI;
 import appmodes.interfaces.IAppModeWithCommands;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.SortedMap;
 public class SelectCommandMode extends AppMode implements IAppModeWithCommands {
     protected SortedMap<String, Class<? extends ICommand>> commandMap;
 
-    public SelectCommandMode(CLI cli, SortedMap<String, Class<? extends ICommand>> avaliableCommands) {
+    public SelectCommandMode(ICLI cli, SortedMap<String, Class<? extends ICommand>> avaliableCommands) {
         super(cli);
         this.commandMap = avaliableCommands;
     }

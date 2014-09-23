@@ -1,11 +1,11 @@
 package api.auth;
 
+import app.LoggerX;
 import commands.DefaultMode.AuthCmd;
 import commands.core.CommandParser;
 import app.App;
 import app.Config;
 import app.Consts;
-import app.Logger;
 import net.URLUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -197,7 +197,7 @@ public class DirectAuthoriser implements IAuthoriser {
             } catch (ClassNotFoundException e) {
                 // ignore
             } catch (IllegalStateException e) {
-                App.get().logger().println(e.getMessage(), Logger.Level.ERROR);
+                App.get().logger().println(e.getMessage(), LoggerX.Level.ERROR);
             }
         }
         return cookies;
@@ -215,7 +215,7 @@ public class DirectAuthoriser implements IAuthoriser {
                     stream.close();
                 }
             } catch (IllegalStateException e) {
-                App.get().logger().println(e.getMessage(), Logger.Level.ERROR);
+                App.get().logger().println(e.getMessage(), LoggerX.Level.ERROR);
             }
         }
     }

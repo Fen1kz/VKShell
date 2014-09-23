@@ -1,7 +1,13 @@
 package main.cli;
 
-/**
- * Created by User on 04.09.2014.
- */
+import jline.TerminalFactory;
+import jline.console.ConsoleReader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+
 public interface ICLI {
+    public String getInput() throws IOException;
+    public PrintStream out();
 }

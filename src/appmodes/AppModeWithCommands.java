@@ -7,7 +7,7 @@ import commands.core.CommandParser;
 import commands.core.ICommand;
 import commands.core.exceptions.UnknownCommandException;
 import appmodes.interfaces.IAppModeWithCommands;
-import main.cli.CLI;
+import main.cli.ICLI;
 
 import java.util.Comparator;
 import java.util.SortedMap;
@@ -23,7 +23,7 @@ public abstract class AppModeWithCommands extends AppMode implements IAppModeWit
 
     protected SortedMap<String, Class<? extends ICommand>> commandMap;
 
-    public AppModeWithCommands(CLI cli) {
+    public AppModeWithCommands(ICLI cli) {
         super(cli);
     }
 

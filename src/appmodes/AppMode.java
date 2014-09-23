@@ -1,20 +1,20 @@
 package appmodes;
 
-import main.cli.CLI;
+import main.cli.ICLI;
 import appmodes.interfaces.IAppMode;
 
 import java.io.IOException;
 
 public abstract class AppMode implements IAppMode {
-    protected CLI cli;
+    protected ICLI cli;
 
-    public AppMode(CLI cli) {
+    public AppMode(ICLI cli) {
         this.cli = cli;
         init();
     }
 
     @Override
-    public CLI getCLI() {
+    public ICLI getCLI() {
         return cli;
     }
 

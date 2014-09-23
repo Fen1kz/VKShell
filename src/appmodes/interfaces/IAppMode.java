@@ -1,9 +1,9 @@
 package appmodes.interfaces;
 
-import main.cli.CLI;
+import main.cli.ICLI;
 
 public interface IAppMode {
-    public CLI getCLI();
+    public ICLI getCLI();
 
     public void start();
 
