@@ -1,12 +1,22 @@
-package test;
+import commands.DefaultMode.AuthCmd;
+import commands.Global.EchoCmd;
+import commands.core.CommandArgs;
+import commands.core.CommandParser;
+import commands.core.ICommand;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class TestCommandParser {
-    /*
+
     //@Test
     public void testCommandEquality() {
-        ICommand authCmd = new AuthCmd();
-        AuthCmd authCmd2 = new AuthCmd();
-        ICommand echoCmd = new EchoCmd();
+        AuthCmd authCmd = new AuthCmd();
+        ICommand authCmd2 = new AuthCmd();
+
+        EchoCmd echoCmd = new EchoCmd();
         EchoCmd echoCmdWithOptions = new EchoCmd();
         echoCmdWithOptions.uppercase = true;
 
@@ -15,18 +25,18 @@ public class TestCommandParser {
         EchoCmd echoCmdWithOptions3 = new EchoCmd();
         echoCmdWithOptions.verbose = true;
 
-        Assert.assertNotEquals(authCmd, null);
-        Assert.assertEquals(authCmd, authCmd);
-        Assert.assertEquals(authCmd, authCmd2);
-        Assert.assertNotEquals(echoCmd, authCmd2);
-        Assert.assertNotEquals(echoCmd, echoCmdWithOptions);
-        Assert.assertEquals(echoCmdWithOptions2, echoCmdWithOptions3);
+        assertThat(authCmd, is(not(null)));
+        assertThat(authCmd, is(authCmd));
+        assertThat(authCmd, is(authCmd2));
+        assertThat(echoCmd,  is(not(authCmd2)));
+        assertThat(echoCmd,  is(not(echoCmdWithOptions)));
+        assertThat(echoCmdWithOptions2, is(echoCmdWithOptions3));
     }
 
-    //@Test
+    @Test
     public void testMini() {
         //System.out.println(CommandParser.parseCommand(EchoCmd.class, "-rep abc -up -prefixvrep 2 -up hai wrong arg, x_x ,,,pls no, -up hai\\, hai, tests tests"));
-        System.out.println(CommandParser.parseCommand(EchoCmd.class, "-rep abc -prefixvrep 2 -up hai hai, tests tests"));
+        //System.out.println(CommandParser.parseCommand(EchoCmd.class, "-rep abc -prefixvrep 2 -up hai hai, tests tests"));
         //System.out.println(CommandParser.parseCommand(EchoCmd.class, " -prefix ' omg \"' -up"));
         //System.out.println(CommandParser.parseCommand(EchoCmd.class, "ec -prefix 'hai: ' -up arg1, arg2"));
     }
@@ -39,7 +49,7 @@ public class TestCommandParser {
 
         echoCmd = new EchoCmd();
         echoCmd.uppercase = true;
-        Assert.assertNotEquals(echoCmd, CommandParser.parseCommand(EchoCmd.class, "").getCommand());
+        //Assert.assertNotEquals(echoCmd, CommandParser.parseCommand(EchoCmd.class, "").getCommand());
         Assert.assertEquals(echoCmd, CommandParser.parseCommand(EchoCmd.class, "-up").getCommand());
 
         echoCmd = new EchoCmd();
@@ -51,12 +61,14 @@ public class TestCommandParser {
                 new CommandParser.ParsedCommand(echoCmd, new CommandArgs("hai hai", "tests tests"))
                 , CommandParser.parseCommand(EchoCmd.class, "-rep abc -prefixvrep 2 -up hai hai, tests tests"));
 
-    }*/
+    }
 
 
         /*
 dl -path "D:\music" -threads 4 a/
 dl -path 'D:\music' -threads 4 a/
+vkshell auth qwe qwe | dl albums -l=50 -thr=3 T:\music\VKShell
+
 - -- -s-k 123 asdf honor for al,,h, haiaha -44
 -uplc -rep 4 - -- -s-s 123 asdf honor for al, ,,j,haiaha
 asdf -uplc -rep 4 -s-s - -- 123 asdf honor for al, haiaha

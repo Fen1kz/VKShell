@@ -29,11 +29,11 @@ public class SelectCommandMode extends AppMode implements IAppModeWithCommands {
 
     public String getPrompt() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Found multiple commands, choose one (type number or command): ");
+        sb.append("Found multiple commands, choose one (type number or command): \n");
         int i = 0;
         for (Map.Entry<String, Class<? extends ICommand>> entry : commandMap.entrySet()) {
             ++i;
-            sb.append(i + ") " + entry.getKey());
+            sb.append(i + ") " + entry.getKey() + "\n");
         }
         return sb.toString();
     }

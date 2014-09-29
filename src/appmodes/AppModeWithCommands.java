@@ -6,21 +6,20 @@ import commands.Global.ExitCmd;
 import commands.core.CommandParser;
 import commands.core.ICommand;
 import commands.core.exceptions.UnknownCommandException;
-import appmodes.interfaces.IAppModeWithCommands;
 import main.cli.ICLI;
+import appmodes.interfaces.IAppModeWithCommands;
 
 import java.util.Comparator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 public abstract class AppModeWithCommands extends AppMode implements IAppModeWithCommands {
-    private static final Comparator<String> commandMapSort = new Comparator<String>() {
+    public static final Comparator<String> commandMapSort = new Comparator<String>() {
         @Override
         public int compare(String key1, String key2) {
             return key1.compareTo(key2);
         }
     };
-
     protected SortedMap<String, Class<? extends ICommand>> commandMap;
 
     public AppModeWithCommands(ICLI cli) {

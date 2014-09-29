@@ -1,10 +1,11 @@
 package appmodes.SubModes;
 
+import commands.AudioMode.*;
 import main.cli.ICLI;
 import appmodes.SubMode;
 
-public class IMMode extends SubMode {
-    public IMMode(ICLI cli) {
+public class AudioMode extends SubMode {
+    public AudioMode(ICLI cli) {
         super(cli);
     }
 
@@ -12,12 +13,11 @@ public class IMMode extends SubMode {
     protected void init() {
         super.init();
         registerCommands(
-                //ListCmd.class
-        );
+                ListCmd.class);
     }
 
     @Override
     public String getPrompt() {
-        return super.getPrompt() + "im>";
+        return super.getPrompt() + "audio>";
     }
 }

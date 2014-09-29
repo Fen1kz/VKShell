@@ -1,14 +1,13 @@
 package appmodes;
 
+import commands.DefaultMode.AudioCmd;
 import commands.DefaultMode.AuthCmd;
 import commands.DefaultMode.IMCmd;
 import commands.core.CommandParser;
 import commands.core.ICommand;
 import main.cli.ICLI;
 
-import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class DefaultMode extends AppModeWithCommands {
     public DefaultMode(ICLI cli) {
@@ -20,7 +19,8 @@ public class DefaultMode extends AppModeWithCommands {
         super.init();
         registerCommands(
                 AuthCmd.class,
-                IMCmd.class);
+                IMCmd.class,
+                AudioCmd.class);
     }
 
     @Override
@@ -36,12 +36,8 @@ public class DefaultMode extends AppModeWithCommands {
 
     private void showMenu() {
         int cmdIndex = 0;
-        SortedSet<Class<? extends ICommand>> set = new TreeSet<>(new Comparator<Class<? extends ICommand>>() {
-            @Override
-            public int compare(Class<? extends ICommand> c1, Class<? extends ICommand> c2) {
-                return (c1 == c2) ? 0 : -1;
-            }
-        });
+        Set<Class<? extends ICommand>> set = new LinkedHashSet<>();
+
         set.addAll(commandMap.values());
 
         System.out.println("------ CLI Command Listing ------");

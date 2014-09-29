@@ -49,4 +49,10 @@ public class CLI implements ICLI {
     public PrintStream out() {
         return out;
     }
+
+    @Override
+    public ICLI setEcho(boolean flag) {
+        echo = flag;
+        return this;
+    }
 }

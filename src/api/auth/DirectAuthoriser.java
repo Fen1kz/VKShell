@@ -1,12 +1,13 @@
 package api.auth;
 
-import app.LoggerX;
 import commands.DefaultMode.AuthCmd;
 import commands.core.CommandParser;
 import app.App;
 import app.Config;
 import app.Consts;
 import net.URLUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +26,7 @@ public class DirectAuthoriser implements IAuthoriser {
     private String username, password, app_id;
     private boolean debug, revoke;
 
+    private static final Logger logger = LogManager.getLogger(IAuthoriser.class);
 
     private final Connection connection = Jsoup.connect(Consts.AUTH_BASE_URI)
             .data("scope", Consts.AUTH_PERMISSIONS)
@@ -35,11 +37,11 @@ public class DirectAuthoriser implements IAuthoriser {
             .method(Connection.Method.GET);
 
     public DirectAuthoriser () {
-        try {
+        /*try {
             loginCookies = getLoginCookies();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -197,7 +199,7 @@ public class DirectAuthoriser implements IAuthoriser {
             } catch (ClassNotFoundException e) {
                 // ignore
             } catch (IllegalStateException e) {
-                App.get().logger().println(e.getMessage(), LoggerX.Level.ERROR);
+                logger.error(e);
             }
         }
         return cookies;
@@ -215,14 +217,14 @@ public class DirectAuthoriser implements IAuthoriser {
                     stream.close();
                 }
             } catch (IllegalStateException e) {
-                App.get().logger().println(e.getMessage(), LoggerX.Level.ERROR);
+                logger.error(e);
             }
         }
     }
 
     private void debug(String string) {
         if (debug) {
-            App.get().logger().println(string);
+            logger.debug(string);
         }
     }
 }
