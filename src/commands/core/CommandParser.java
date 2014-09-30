@@ -3,6 +3,10 @@ package commands.core;
 import appmodes.SelectCommandMode;
 import appmodes.interfaces.IAppModeWithCommands;
 import commands.core.exceptions.UnknownCommandException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -14,6 +18,10 @@ public class CommandParser {
     public static final Matcher matcherOptionsParameter = Pattern.compile("^\\s*(([\\wа-я\\d\\.])+|([\"']).*\\3)").matcher("");
     //public static final Matcher matcherArgs = Pattern.compile("(?<=[\\s,]|^)([^,\\-\\s][^,]*)").matcher("");
     public static final Matcher matcherArgs = Pattern.compile("(?<=[\\s,]++|^)(\\\\,|[^,])+").matcher("");
+
+    private static final Logger logger = LogManager.getLogger(CommandParser.class);
+    private static final Marker FINDING_OPTION = MarkerManager.getMarker("OPTIONS");
+
     private CommandParser() {
     }
 
@@ -24,11 +32,13 @@ public class CommandParser {
     }
 
     public static ParsedCommand parseCommand(Class<? extends ICommand> commandclass, final String inputline) {
+        StringBuilder sb = new StringBuilder();
+
         ParsedCommand parsedCommand = new ParsedCommand();
         parsedCommand.command = getCommandInstance(commandclass);
-        ArrayList<String> arguments = new ArrayList<String>();
+        ArrayList<String> arguments = new ArrayList<>();
 
-        //System.out.println(commandclass + ":" + inputline);
+        logger.debug("Parsing command <{}> with <{}>", commandclass, inputline);
         if (inputline != null) {
             StringBuilder parameter = new StringBuilder();
             StringBuilder rest = new StringBuilder(inputline.trim());
@@ -36,17 +46,17 @@ public class CommandParser {
             // ===== ===== ===== Options
             SortedMap<String, Option> avaliableOptions = parsedCommand.command.getOptions();
 
-            boolean option_found = false;
+            boolean option_found;
             do {
-                //System.out.println("Searching in: " + rest);
+                logger.debug("Searching in <{}>", rest);
                 matcherOption.reset(rest);
                 option_found = matcherOption.find();
                 if (option_found) {
-                    //System.out.println("Found group: " + matcherOption.group());
+                    logger.debug("Found group: <{}>", matcherOption.group());
                     Collection<Option> optionsInSubstring = findOption(avaliableOptions, matcherOption.group());
-                    //System.out.println("Options found: " + optionsInSubstring);
+                    logger.debug("Options found: " + optionsInSubstring);
                     if (optionsInSubstring.isEmpty()) {
-                        //System.out.println("Aboring");
+                        logger.debug("Aboring");
                         break;
                     }
                     // else taking substring
@@ -57,7 +67,7 @@ public class CommandParser {
                     boolean parameter_used = false;
                     if (matcherOptionsParameter.find()) {
                         parameter.append(matcherOptionsParameter.group());
-                        //System.out.println("Parameter found: " + matcherOptionsParameter.group());
+                        logger.debug("Parameter found: " + matcherOptionsParameter.group());
                     }
 
                     for (Option option : optionsInSubstring) {
@@ -70,39 +80,37 @@ public class CommandParser {
                         assignOption(parsedCommand.command, option, parameter.toString().trim());
                     }
                 }
-                //System.out.println();
             } while (option_found);
             // ===== ===== ===== Arguments
-            //System.out.println("Arguments left: " + rest);
+            logger.debug("Arguments string: <{}>", rest);
 
             matcherArgs.reset(rest);
             while (matcherArgs.find()) {
-                //System.out.println("Argument: " + matcherArgs.group().trim());
+                logger.debug("Argument: " + matcherArgs.group().trim());
                 arguments.add(matcherArgs.group().trim().replaceAll("\\\\,", ","));
             }
-
-            //System.out.println();
         }
-        //System.out.println("Arguments are: " + arguments);
+        logger.debug("Arguments are: " + arguments);
         parsedCommand.commandArgs = new CommandArgs(arguments);
+        logger.debug("");
         return parsedCommand;
     }
 
     public static void assignOption(ICommand command, Option option, String parameter) {
         try {
-            //System.out.println("Assigned <" + option.getName() + "> to <" + parameter + ">");
+            logger.debug("Assigned <{}> to <{}>", option.getName(), parameter);
             option.setFromString(command, parameter);
         } catch (IllegalArgumentException e) {
-            System.out.println("<" + option.getName() + "> illegal arg <" + parameter + ">");
+            logger.debug("<" + option.getName() + "> illegal arg <" + parameter + ">");
         }
     }
 
     private static Collection<Option> findOption(SortedMap<String, Option> options, String source) {
-        Collection<Option> list = new HashSet<Option>();
+        Collection<Option> list = new HashSet<>();
+        logger.debug(FINDING_OPTION, "Options avaliable: {}", options.keySet());
         for (Map.Entry<String, Option> entry : options.entrySet()) {
-            //System.out.println(entry.getKey());
             if (source.contains(entry.getKey())) {
-                //System.out.println("found option <" + entry.getKey() + ">");
+                logger.debug(FINDING_OPTION, "found option <" + entry.getKey() + ">");
                 list.add(entry.getValue());
                 source = source.replace(entry.getKey(), "");
                 if (source.isEmpty()) {
@@ -145,11 +153,11 @@ public class CommandParser {
             }
         }
 
-        //System.out.println(avaliableCommands.getClass().getSimpleName() +":"+avaliableCommands);
+        logger.debug(avaliableCommands.getClass().getSimpleName() +":"+avaliableCommands);
         if (avaliableCommands.size() == 0) {
             throw new UnknownCommandException(commandname);
         } else if (avaliableCommands.size() == 1) {
-            //System.out.println("Found command: " + avaliableCommands.get(0));
+            logger.debug("Found command: " + avaliableCommands.get(0));
             return avaliableCommands.get(avaliableCommands.firstKey());
         } else {
             return new SelectCommandMode(mode.getCLI(), avaliableCommands).getSelection();
