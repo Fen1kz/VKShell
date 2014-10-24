@@ -1,5 +1,6 @@
-package appmodes;
+package commands.DefaultMode;
 
+import appmodes.AppModeWithCommands;
 import commands.DefaultMode.AudioCmd;
 import commands.DefaultMode.AuthCmd;
 import commands.DefaultMode.IMCmd;

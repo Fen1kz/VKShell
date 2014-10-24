@@ -4,7 +4,7 @@ import commands.core.ACommand;
 import commands.core.Command;
 import commands.core.CommandArgs;
 import app.App;
-import appmodes.SubModes.AudioMode;
+import commands.AudioMode.AudioMode;
 
 @ACommand(names = {"audio"}, desc = "launches audio mode")
 public class AudioCmd extends Command {

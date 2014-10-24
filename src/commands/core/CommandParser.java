@@ -13,11 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandParser {
-    public static final Matcher matcherOption = Pattern.compile("^\\s*(\\-[\\wа-я\\?]+)").matcher("");
-    //public static final Matcher matcherOptionsParameter = Pattern.compile("^\\s*(([\\wа-я\\d])+|((?<quotes>[\"']).*\\k<quotes>))").matcher("");
-    public static final Matcher matcherOptionsParameter = Pattern.compile("^\\s*(([\\wа-я\\d\\.])+|([\"']).*\\3)").matcher("");
-    //public static final Matcher matcherArgs = Pattern.compile("(?<=[\\s,]|^)([^,\\-\\s][^,]*)").matcher("");
-    public static final Matcher matcherArgs = Pattern.compile("(?<=[\\s,]++|^)(\\\\,|[^,])+").matcher("");
+    @SuppressWarnings("MalformedRegex") // Intellij IDEA warning at \\k'q'
+    public static final Matcher matcherOption = Pattern.compile("(?<=^|\\s+)(?<OPTION>-[\\wа-я\\?]+)(?<PARAMETER>=(?<q>[\"']).*\\k<q>|([^\\s])+)?").matcher("");
+    public static final Matcher matcherArgs = Pattern.compile("(?<=[\\s,]++|^)([^\\s])+").matcher("");
 
     private static final Logger logger = LogManager.getLogger(CommandParser.class);
     private static final Marker FINDING_OPTION = MarkerManager.getMarker("OPTIONS");
@@ -32,15 +30,12 @@ public class CommandParser {
     }
 
     public static ParsedCommand parseCommand(Class<? extends ICommand> commandclass, final String inputline) {
-        StringBuilder sb = new StringBuilder();
-
         ParsedCommand parsedCommand = new ParsedCommand();
         parsedCommand.command = getCommandInstance(commandclass);
         ArrayList<String> arguments = new ArrayList<>();
 
-        logger.debug("Parsing command <{}> with <{}>", commandclass, inputline);
+        logger.trace("Parsing command <{}> with <{}>", commandclass, inputline);
         if (inputline != null) {
-            StringBuilder parameter = new StringBuilder();
             StringBuilder rest = new StringBuilder(inputline.trim());
 
             // ===== ===== ===== Options
@@ -48,69 +43,56 @@ public class CommandParser {
 
             boolean option_found;
             do {
-                logger.debug("Searching in <{}>", rest);
+                logger.trace("Searching in <{}>", rest);
                 matcherOption.reset(rest);
                 option_found = matcherOption.find();
                 if (option_found) {
-                    logger.debug("Found group: <{}>", matcherOption.group());
-                    Collection<Option> optionsInSubstring = findOption(avaliableOptions, matcherOption.group());
-                    logger.debug("Options found: " + optionsInSubstring);
+                    logger.trace("Found group: <{}>: <{}>=<{}>", matcherOption.group(), matcherOption.group("OPTION"), matcherOption.group("PARAMETER"));
+                    Collection<Option> optionsInSubstring = findOption(avaliableOptions, matcherOption.group("OPTION"));
+                    logger.trace("Options found: " + optionsInSubstring);
                     if (optionsInSubstring.isEmpty()) {
-                        logger.debug("Aboring");
+                        logger.trace("Aboring");
                         break;
                     }
-                    // else taking substring
-                    rest = rest.delete(0, matcherOption.end());
 
-                    parameter.setLength(0);
-                    matcherOptionsParameter.reset(rest);
-                    boolean parameter_used = false;
-                    if (matcherOptionsParameter.find()) {
-                        parameter.append(matcherOptionsParameter.group());
-                        logger.debug("Parameter found: " + matcherOptionsParameter.group());
-                    }
-
+                    String parameter = matcherOption.group("PARAMETER") != null ? matcherOption.group("PARAMETER").trim().substring(1) : "true";
                     for (Option option : optionsInSubstring) {
-                        if (!option.isBoolean()) {
-                            if (!parameter_used) {
-                                parameter_used = true;
-                                rest = rest.delete(0, matcherOptionsParameter.end());
-                            }
-                        }
-                        assignOption(parsedCommand.command, option, parameter.toString().trim());
+                        assignOption(parsedCommand.command, option, parameter);
                     }
+
+                    rest = rest.delete(0, matcherOption.end());
                 }
             } while (option_found);
             // ===== ===== ===== Arguments
-            logger.debug("Arguments string: <{}>", rest);
+            logger.trace("Arguments string: <{}>", rest);
 
             matcherArgs.reset(rest);
             while (matcherArgs.find()) {
-                logger.debug("Argument: " + matcherArgs.group().trim());
+                logger.trace("Argument: " + matcherArgs.group().trim());
                 arguments.add(matcherArgs.group().trim().replaceAll("\\\\,", ","));
             }
         }
-        logger.debug("Arguments are: " + arguments);
+        logger.trace("Arguments are: {}", arguments);
         parsedCommand.commandArgs = new CommandArgs(arguments);
-        logger.debug("");
+        logger.trace("Command <{}> parsed\n", commandclass);
         return parsedCommand;
     }
 
     public static void assignOption(ICommand command, Option option, String parameter) {
         try {
-            logger.debug("Assigned <{}> to <{}>", option.getName(), parameter);
+            logger.trace("Assigned <{}> to <{}>", option.getName(), parameter);
             option.setFromString(command, parameter);
         } catch (IllegalArgumentException e) {
-            logger.debug("<" + option.getName() + "> illegal arg <" + parameter + ">");
+            logger.trace("<" + option.getName() + "> illegal arg <" + parameter + ">");
         }
     }
 
     private static Collection<Option> findOption(SortedMap<String, Option> options, String source) {
         Collection<Option> list = new HashSet<>();
-        logger.debug(FINDING_OPTION, "Options avaliable: {}", options.keySet());
+        logger.trace(FINDING_OPTION, "Options avaliable: {}", options.keySet());
         for (Map.Entry<String, Option> entry : options.entrySet()) {
             if (source.contains(entry.getKey())) {
-                logger.debug(FINDING_OPTION, "found option <" + entry.getKey() + ">");
+                logger.trace(FINDING_OPTION, "found option <" + entry.getKey() + ">");
                 list.add(entry.getValue());
                 source = source.replace(entry.getKey(), "");
                 if (source.isEmpty()) {
@@ -153,11 +135,11 @@ public class CommandParser {
             }
         }
 
-        logger.debug(avaliableCommands.getClass().getSimpleName() +":"+avaliableCommands);
+        logger.trace(avaliableCommands.getClass().getSimpleName() +":"+avaliableCommands);
         if (avaliableCommands.size() == 0) {
             throw new UnknownCommandException(commandname);
         } else if (avaliableCommands.size() == 1) {
-            logger.debug("Found command: " + avaliableCommands.get(0));
+            logger.trace("Found command: " + avaliableCommands.get(0));
             return avaliableCommands.get(avaliableCommands.firstKey());
         } else {
             return new SelectCommandMode(mode.getCLI(), avaliableCommands).getSelection();

@@ -7,7 +7,7 @@ import api.auth.VkAccessToken;
 import commands.DefaultMode.AuthCmd;
 import commands.Global.EchoCmd;
 import commands.core.CommandParser;
-import appmodes.DefaultMode;
+import commands.DefaultMode.DefaultMode;
 import main.cli.ICLI;
 
 import java.io.*;

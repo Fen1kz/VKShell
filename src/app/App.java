@@ -7,7 +7,7 @@ import api.auth.VkAccessToken;
 import commands.DefaultMode.AuthCmd;
 import commands.core.CommandParser;
 import main.cli.ICLI;
-import appmodes.DefaultMode;
+import commands.DefaultMode.DefaultMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

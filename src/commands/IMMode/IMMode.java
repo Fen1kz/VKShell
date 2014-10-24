@@ -1,4 +1,4 @@
-package appmodes.SubModes;
+package commands.IMMode;
 
 import main.cli.ICLI;
 import appmodes.SubMode;

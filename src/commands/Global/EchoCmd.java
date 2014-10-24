@@ -1,5 +1,6 @@
 package commands.Global;
 
+import app.App;
 import commands.core.ACommand;
 import commands.core.AOption;
 import commands.core.Command;
@@ -19,11 +20,12 @@ public class EchoCmd extends Command {
     @AOption(names = {"prefix"}, desc = "Prefix output")
     public String prefix = "";
 
+    @AOption(names = {"suffix"}, desc = "Prefix output")
+    public String suffix = "";
+
     @Override
     public void action(CommandArgs args) {
         for (String arg : args.getArgumentsList()) {
-            arg = prefix + arg;
-
             if (uppercase) {
                 arg = arg.toUpperCase();
             }
@@ -31,7 +33,7 @@ public class EchoCmd extends Command {
                 arg = arg.toLowerCase();
             }
             for (int i = 0; i < repeat; ++i) {
-                System.out.println(arg);
+                App.get().cli().out().println(prefix + arg + suffix);
             }
         }
     }

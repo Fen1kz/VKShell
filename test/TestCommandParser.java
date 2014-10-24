@@ -3,6 +3,7 @@ import commands.Global.EchoCmd;
 import commands.core.CommandArgs;
 import commands.core.CommandParser;
 import commands.core.ICommand;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,6 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestCommandParser {
-
     //@Test
     public void testCommandEquality() {
         AuthCmd authCmd = new AuthCmd();
@@ -43,15 +43,29 @@ public class TestCommandParser {
 
     @Test
     public void testParser() {
-        Assert.assertEquals(new AuthCmd(), CommandParser.parseCommand(AuthCmd.class, "").getCommand());
+        //Assert.assertEquals(new AuthCmd(), CommandParser.parseCommand(AuthCmd.class, "").getCommand());
 
         EchoCmd echoCmd;
 
         echoCmd = new EchoCmd();
         echoCmd.uppercase = true;
         //Assert.assertNotEquals(echoCmd, CommandParser.parseCommand(EchoCmd.class, "").getCommand());
-        Assert.assertEquals(echoCmd, CommandParser.parseCommand(EchoCmd.class, "-up").getCommand());
+        //Assert.assertEquals(echoCmd, CommandParser.parseCommand(EchoCmd.class, "-up").getCommand());
 
+        echoCmd = new EchoCmd();
+        echoCmd.uppercase = true;
+        echoCmd.prefix = "a b";
+        echoCmd.suffix = "c\"";
+        echoCmd.repeat = 2;
+        echoCmd.verbose = true;
+
+        CommandParser.ParsedCommand parsed = CommandParser.parseCommand(EchoCmd.class, "-rep=abc -prefixvrep=2 -up -prefix='a b' -suffix=c\" \"hai hai, tests tests");
+        Assert.assertEquals(
+                new CommandParser.ParsedCommand(echoCmd, new CommandArgs("\"hai", "hai,", "tests", "tests"))
+                , parsed);
+
+
+/*
         echoCmd = new EchoCmd();
         echoCmd.uppercase = true;
         echoCmd.prefix = "2";
@@ -59,8 +73,7 @@ public class TestCommandParser {
         echoCmd.verbose = true;
         Assert.assertEquals(
                 new CommandParser.ParsedCommand(echoCmd, new CommandArgs("hai hai", "tests tests"))
-                , CommandParser.parseCommand(EchoCmd.class, "-rep abc -prefixvrep 2 -up hai hai, tests tests"));
-
+                , CommandParser.parseCommand(EchoCmd.class, "-rep abc -prefixvrep 2 -up hai hai, tests tests"));*/
     }
 
 

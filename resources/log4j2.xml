@@ -6,7 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <logger name="commands.core.CommandParser" level="debug"/>
+        <logger name="commands.core.CommandParser" level="trace"/>
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>

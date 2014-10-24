@@ -1,4 +1,4 @@
-package appmodes.SubModes;
+package commands.AudioMode;
 
 import commands.AudioMode.*;
 import main.cli.ICLI;
