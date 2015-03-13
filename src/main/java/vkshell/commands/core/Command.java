@@ -1,11 +1,15 @@
 package vkshell.commands.core;
 
-import vkshell.app.App;
+import org.springframework.beans.factory.annotation.Autowired;
+import vkshell.main.cli.ICLI;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 public abstract class Command implements ICommand {
+    @Autowired
+    protected ICLI cli;
+
     private static final Comparator<String> optionssort = new Comparator<String>() {
         @Override
         public int compare(String key1, String key2) {
@@ -36,7 +40,7 @@ public abstract class Command implements ICommand {
     @Override
     public void execute(CommandArgs args) {
         if (help) {
-            App.get().cli().out().println("Helpful help.");
+            cli.out().println("Helpful help.");
             return;
         }
         action(args);

@@ -4,10 +4,6 @@ import vkshell.main.cli.ICLI;
 import vkshell.appmodes.SubMode;
 
 public class IMMode extends SubMode {
-    public IMMode(ICLI cli) {
-        super(cli);
-    }
-
     @Override
     protected void init() {
         super.init();

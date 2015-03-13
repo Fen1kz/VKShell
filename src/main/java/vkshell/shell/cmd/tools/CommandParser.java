@@ -35,7 +35,7 @@ public class CommandParser implements ICommandParser {
     public IParsedCommand parseCommand(Class<? extends ICommand> commandclass, String inputline) {
         ParsedCommand parsedCommand = new ParsedCommand();
         parsedCommand.command = getCommandInstance(commandclass);
-        ArrayList<String> arguments = new ArrayList<>();
+        List<String> arguments = new ArrayList<>();
 
         logger.trace("Parsing command <{}> with <{}>", commandclass, inputline);
         if (inputline != null) {
@@ -106,7 +106,8 @@ public class CommandParser implements ICommandParser {
         return list;
     }
 
-    private ICommand getCommandInstance(Class<? extends ICommand> commandclass) {
+    @Override
+    public ICommand getCommandInstance(Class<? extends ICommand> commandclass) {
         ICommand cmd = null;
         try {
             cmd = commandclass.newInstance();
@@ -116,7 +117,8 @@ public class CommandParser implements ICommandParser {
         return cmd;
     }
 
-    private Class<? extends ICommand> findCommandClass(IAppModeWithCommands mode, String commandname) throws UnknownCommandException {
+    @Override
+    public Class<? extends ICommand> findCommandClass(IAppModeWithCommands mode, String commandname) throws UnknownCommandException {
         if (mode.getCommandMap().containsKey(commandname)) {
             return mode.getCommandMap().get(commandname);
         }
@@ -143,7 +145,7 @@ public class CommandParser implements ICommandParser {
             logger.trace("Found command: " + avaliableCommands.get(0));
             return avaliableCommands.get(avaliableCommands.firstKey());
         } else {
-            return new SelectCommandMode(mode.getCLI(), avaliableCommands).getSelection();
+            return new SelectCommandMode(avaliableCommands).getSelection();
         }
     }
 

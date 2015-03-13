@@ -1,9 +1,10 @@
 package vkshell.api.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.api.VkAPI;
 import vkshell.commands.DefaultMode.AuthCmd;
-import vkshell.commands.core.CommandParser;
-import vkshell.app.App;
+
+
 import vkshell.app.Config;
 import vkshell.net.URLUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import vkshell.shell.cmd.tools.interfaces.ICommandParser;
 
 import java.io.*;
 import java.util.HashMap;
@@ -36,6 +38,9 @@ public class DirectAuthoriser implements IAuthoriser {
             .data("response_type", VkAPI.AUTH_RESPONSE_TYPE)
             .method(Connection.Method.GET);
 
+    @Autowired
+    private Config config;
+
     public DirectAuthoriser () {
         /*try {
             loginCookies = getLoginCookies();
@@ -45,7 +50,7 @@ public class DirectAuthoriser implements IAuthoriser {
     }
 
     @Override
-    public VkAccessToken authorise(CommandParser.ParsedCommand<AuthCmd> cmd) throws AuthoriseException, AuthoriseError {
+    public VkAccessToken authorise(ICommandParser.IParsedCommand<AuthCmd> cmd) throws AuthoriseException, AuthoriseError {
         username = cmd.getCommand().clear ? null : cmd.getCommandArgs().get(0);
         password = cmd.getCommand().clear ? null : cmd.getCommandArgs().get(1);
         app_id = cmd.getCommand().appid;
@@ -185,9 +190,9 @@ public class DirectAuthoriser implements IAuthoriser {
 
     private Map<String, String> getLoginCookies() throws IOException {
         HashMap<String, String> cookies = new HashMap<>();
-        if (App.get().config().COOKIE_READ) {
+        if (config.get(Config.Property.COOKIE_READ)) {
             try {
-                File file = App.get().config().getFile(Config.Files.COOKIE_FILE);
+                File file = config.getFile(Config.Files.COOKIE_FILE);
                 ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
                 try {
                     cookies = (HashMap<String, String>) stream.readObject();
@@ -207,17 +212,13 @@ public class DirectAuthoriser implements IAuthoriser {
 
     private void setLoginCookies(Map<String, String> cookies) throws IOException {
         loginCookies = cookies;
-        if (App.get().config().COOKIE_WRITE) {
+        if (config.get(Config.Property.COOKIE_WRITE)) {
+            File file = config.createFile(Config.Files.COOKIE_FILE);
+            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file));
             try {
-                File file = App.get().config().createFile(Config.Files.COOKIE_FILE);
-                ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file));
-                try {
-                    stream.writeObject(cookies);
-                } finally {
-                    stream.close();
-                }
-            } catch (IllegalStateException e) {
-                logger.error(e);
+                stream.writeObject(cookies);
+            } finally {
+                stream.close();
             }
         }
     }

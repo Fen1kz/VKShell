@@ -1,11 +1,12 @@
 package vkshell.api.auth;
 
 import vkshell.commands.DefaultMode.AuthCmd;
-import vkshell.commands.core.CommandParser;
+import vkshell.shell.cmd.tools.interfaces.ICommandParser;
+
 
 public class FakeAuthoriser implements IAuthoriser {
     @Override
-    public VkAccessToken authorise(CommandParser.ParsedCommand<AuthCmd> data) throws AuthoriseException, AuthoriseError {
+    public VkAccessToken authorise(ICommandParser.IParsedCommand<AuthCmd> data) throws AuthoriseException, AuthoriseError {
         return new VkAccessToken("", "", "");
     }
 }

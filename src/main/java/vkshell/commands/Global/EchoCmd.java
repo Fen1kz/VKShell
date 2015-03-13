@@ -1,6 +1,6 @@
 package vkshell.commands.Global;
 
-import vkshell.app.App;
+
 import vkshell.commands.core.ACommand;
 import vkshell.commands.core.AOption;
 import vkshell.commands.core.Command;
@@ -33,7 +33,7 @@ public class EchoCmd extends Command {
                 arg = arg.toLowerCase();
             }
             for (int i = 0; i < repeat; ++i) {
-                App.get().cli().out().println(prefix + arg + suffix);
+                cli.out().println(prefix + arg + suffix);
             }
         }
     }

@@ -1,10 +1,12 @@
 package vkshell.appmodes;
 
-import vkshell.commands.core.CommandParser;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.commands.core.ICommand;
 import vkshell.commands.core.exceptions.UnknownCommandException;
 import vkshell.main.cli.ICLI;
 import vkshell.appmodes.interfaces.IAppModeWithCommands;
+import vkshell.shell.cmd.tools.interfaces.ICommandParser;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -12,8 +14,10 @@ import java.util.SortedMap;
 public class SelectCommandMode extends AppMode implements IAppModeWithCommands {
     protected SortedMap<String, Class<? extends ICommand>> commandMap;
 
-    public SelectCommandMode(ICLI cli, SortedMap<String, Class<? extends ICommand>> avaliableCommands) {
-        super(cli);
+    @Autowired
+    protected ICommandParser commandParser;
+
+    public SelectCommandMode(SortedMap<String, Class<? extends ICommand>> avaliableCommands) {
         this.commandMap = avaliableCommands;
     }
 
@@ -23,9 +27,7 @@ public class SelectCommandMode extends AppMode implements IAppModeWithCommands {
     }
 
     @Override
-    public void start() {
-
-    }
+    public void start() {}
 
     public String getPrompt() {
         StringBuilder sb = new StringBuilder();
@@ -56,7 +58,7 @@ public class SelectCommandMode extends AppMode implements IAppModeWithCommands {
             }
         }
         try {
-            return CommandParser.findCommandClass(this, inputline);
+            return commandParser.findCommandClass(this, inputline);
         } catch (UnknownCommandException e) {
             throw new UnknownCommandException(inputline);
         }

@@ -1,33 +1,40 @@
 package vkshell.commands.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import vkshell.api.VkAPI;
 import vkshell.api.exceptions.VKAPIException;
-import vkshell.app.App;
+import vkshell.main.cli.ICLI;
 
 public abstract class VKApiCommand extends Command {
-    protected String userid;
-
     @AOption(names = {"debug", "r"}, desc = "shows raw debug")
     public boolean debug = false;
 
+    @Autowired
+    protected VkAPI api;
+
+    protected String userid;
+
     @Override
     protected void action(CommandArgs args) {
-        userid = App.get().getUserId();
+        userid = api.getUserId();
         try {
             vkAPIAction(args);
         } catch (VKAPIException e) {
             switch (e.error) {
                 case AUTH_FAILED:
-                    App.get().cli().out().println("Auth error");
-                    App.get().reauthorise();
-                    try {
-                        vkAPIAction(args);
-                    } catch (VKAPIException e1) {
-                        e1.printStackTrace();
-                        //todo something
-                    }
+                    cli.out().println("Auth error");
+//                    api.reauthorise();
+//                    try {
+//                        vkAPIAction(args);
+//                    } catch (VKAPIException e1) {
+//                        e1.printStackTrace();
+//                        //todo something
+//                    }
                     break;
                 default:
-                    App.get().cli().out().println("Unknown error =(");
+                    cli.out().println("Unknown error =(");
             }
         }
     }

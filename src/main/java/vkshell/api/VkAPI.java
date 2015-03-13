@@ -1,16 +1,27 @@
 package vkshell.api;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import vkshell.api.auth.VkAccessToken;
 import vkshell.api.exceptions.VKAPIException;
-import vkshell.app.App;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import vkshell.app.Config;
+import vkshell.commands.DefaultMode.AuthCmd;
+import vkshell.main.cli.ICLI;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class VkAPI {
+    private static final Logger logger = LogManager.getLogger(VkAPI.class);
+
     public static final String URL = "https://api.vk.com/method/";
     public static final String VK_API_VERSION = "5.24";
     //https://vk.com/dev/auth_mobile
@@ -21,17 +32,70 @@ public class VkAPI {
     public static final String AUTH_DISPLAY = "wap";
     public static final String AUTH_RESPONSE_TYPE = "token";
 
-    public static JSONObject sendRequest(String methodName, Map<String, String> parameters) throws VKAPIException {
+    @Autowired
+    Config config;
+
+    @Autowired
+    ICLI cli;
+
+    private VkAccessToken token;
+
+    public String getUserId() {
+        if (getToken().valid()) {
+            return getToken().getUserId();
+        } else {
+            if (config.get(Config.Property.AUTH_AUTO_RETRY) && reauthorise()) {
+                return getToken().getUserId();
+            }
+        }
+        return null;
+    }
+
+
+    public VkAccessToken getToken() {
+        if (token != null) {
+            return token;
+        }
+        VkAccessToken token = new VkAccessToken(null, null, null);
+
+        if (config.get(Config.Property.AUTH_TOKEN_FILE)) {
+            try {
+                File file = config.getFile(Config.Files.TOKEN_FILE);
+                ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
+                try {
+                    token = (VkAccessToken) stream.readObject();
+                } finally {
+                    stream.close();
+                }
+            } catch (ClassNotFoundException e) {
+                logger.info(e);
+            } catch (IOException e) {
+                logger.error(e);
+            }
+        }
+        return token;
+    }
+
+    public boolean reauthorise() {
+        new AuthCmd().execute();
+        return (getToken().valid());
+    }
+
+
+
+
+
+    public JSONObject sendRequest(String methodName, Map<String, String> parameters) throws VKAPIException {
         return sendRequest(methodName, parameters, false);
     }
 
-    public static JSONObject sendRequest(String methodName, Map<String, String> parameters, boolean debug) throws VKAPIException {
+    public JSONObject sendRequest(String methodName, Map<String, String> parameters, boolean debug) throws VKAPIException {
         //https://api.vk.com/url/'''METHOD_NAME'''?'''PARAMETERS'''&access_token='''ACCESS_TOKEN'''
         Connection.Response response = null;
         try {
             response = Jsoup.connect(URL + methodName)
                     .data(parameters)
-                    .data("access_token", App.get().getToken().getAccessToken())
+                    .data("access_token", getToken().getAccessToken())
                     .method(Connection.Method.POST)
                     .ignoreContentType(true)
                     .execute();
@@ -49,11 +113,14 @@ public class VkAPI {
         }
     }
 
-    public static Request build (String methodName) {
+    public Request build (String methodName) {
         return new Request(methodName);
     }
 
     public static class Request {
+        @Autowired
+        VkAPI api;
+
         private final String methodName;
         private final Map<String, String> data = new HashMap<>();
         private boolean debug = false;
@@ -77,7 +144,7 @@ public class VkAPI {
         }
 
         public JSONObject send() throws VKAPIException {
-            return sendRequest(methodName, data, debug);
+            return api.sendRequest(methodName, data, debug);
         }
     }
 }

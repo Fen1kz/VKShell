@@ -10,4 +10,9 @@
     <context:component-scan base-package="vkshell"/>
 
     <bean id="CommandParser" class="vkshell.shell.cmd.tools.CommandParser"></bean>
+    <bean id="CommandLineInterface" class="vkshell.main.cli.JLine2CLI">
+        <property name="in">
+            <value type="java.io.InputStream">System.in</value>
+        </property>
+    </bean>
 </beans>

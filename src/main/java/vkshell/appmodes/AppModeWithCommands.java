@@ -1,13 +1,15 @@
 package vkshell.appmodes;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.commands.Global.BackCmd;
 import vkshell.commands.Global.EchoCmd;
 import vkshell.commands.Global.ExitCmd;
-import vkshell.commands.core.CommandParser;
+
 import vkshell.commands.core.ICommand;
 import vkshell.commands.core.exceptions.UnknownCommandException;
 import vkshell.main.cli.ICLI;
 import vkshell.appmodes.interfaces.IAppModeWithCommands;
+import vkshell.shell.cmd.tools.interfaces.ICommandParser;
 
 import java.util.Comparator;
 import java.util.SortedMap;
@@ -20,11 +22,11 @@ public abstract class AppModeWithCommands extends AppMode implements IAppModeWit
             return key1.compareTo(key2);
         }
     };
-    protected SortedMap<String, Class<? extends ICommand>> commandMap;
 
-    public AppModeWithCommands(ICLI cli) {
-        super(cli);
-    }
+    @Autowired
+    protected ICommandParser commandParser;
+
+    protected SortedMap<String, Class<? extends ICommand>> commandMap;
 
     public SortedMap<String, Class<? extends ICommand>> getCommandMap() {
         return commandMap;
@@ -36,18 +38,18 @@ public abstract class AppModeWithCommands extends AppMode implements IAppModeWit
     }
 
     public boolean handleInput(String input) {
-        CommandParser.ParsedCommand parsedCommand = null;
+        ICommandParser.IParsedCommand parsedCommand = null;
         try {
-            parsedCommand = CommandParser.parseCommand(this, input);
+            parsedCommand = commandParser.parseCommand(this, input);
         } catch (UnknownCommandException e) {
-            getCLI().out().println("Unknown command: " + e.commandname + "");
+            cli.out().println("Unknown command: " + e.commandname + "");
             return true;
         }
         if (parsedCommand.getCommand().getClass() == BackCmd.class) {
             return false;
         }
         parsedCommand.getCommand().execute(parsedCommand.getCommandArgs());
-        getCLI().out().println();
+        cli.out().println();
         return true;
     }
 
@@ -64,19 +66,17 @@ public abstract class AppModeWithCommands extends AppMode implements IAppModeWit
         try {
             for (Class<? extends ICommand> commandClass : commandClasses) {
                 String[] names = commandClass.newInstance().getNames();
-                getCLI().out().print("Registered command <" + names[0] + "> " + commandClass);
+                cli.out().print("Registered command <" + names[0] + "> " + commandClass);
 
-                getCLI().out().print("[");
+                cli.out().print("[");
                 for (String name : names) {
                     System.out.print(name + ", ");
                     commandMap.put(name, commandClass);
                 }
-                getCLI().out().print("]");
-                getCLI().out().println();
+                cli.out().print("]");
+                cli.out().println();
             }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

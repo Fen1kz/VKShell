@@ -1,30 +1,23 @@
 package vkshell.appmodes;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.main.cli.ICLI;
 import vkshell.appmodes.interfaces.IAppMode;
 
 import java.io.IOException;
 
 public abstract class AppMode implements IAppMode {
-    protected ICLI cli;
+    @Autowired
+    ICLI cli;
 
-    public AppMode(ICLI cli) {
-        this.cli = cli;
+    public AppMode() {
         init();
     }
 
-    @Override
-    public ICLI getCLI() {
-        return cli;
-    }
-
-    protected void init() {
-    }
-
-    ;
+    protected void init() {}
 
     protected String getInput() {
-        getCLI().out().print(getPrompt() + " ");
+        cli.out().print(getPrompt() + " ");
         String inputline = null;
         try {
             inputline = cli.getInput();

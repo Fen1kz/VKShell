@@ -1,12 +1,13 @@
 package vkshell.api.auth;
 
 import vkshell.commands.DefaultMode.AuthCmd;
-import vkshell.commands.core.CommandParser;
+import vkshell.shell.cmd.tools.interfaces.ICommandParser;
+
 
 import java.util.Arrays;
 
 public interface IAuthoriser {
-    public VkAccessToken authorise(CommandParser.ParsedCommand<AuthCmd> data) throws AuthoriseException, AuthoriseError;
+    public VkAccessToken authorise(ICommandParser.IParsedCommand<AuthCmd> data) throws AuthoriseException, AuthoriseError;
 
     public static class AuthoriseException extends Exception {
         public final String reason;
