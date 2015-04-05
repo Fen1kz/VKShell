@@ -4,7 +4,6 @@ package vkshell.appmodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.commands.core.ICommand;
 import vkshell.commands.core.exceptions.UnknownCommandException;
-import vkshell.main.cli.ICLI;
 import vkshell.appmodes.interfaces.IAppModeWithCommands;
 import vkshell.shell.cmd.tools.interfaces.ICommandParser;
 

@@ -7,7 +7,6 @@ import vkshell.commands.Global.ExitCmd;
 
 import vkshell.commands.core.ICommand;
 import vkshell.commands.core.exceptions.UnknownCommandException;
-import vkshell.main.cli.ICLI;
 import vkshell.appmodes.interfaces.IAppModeWithCommands;
 import vkshell.shell.cmd.tools.interfaces.ICommandParser;
 
@@ -69,8 +68,11 @@ public abstract class AppModeWithCommands extends AppMode implements IAppModeWit
                 cli.out().print("Registered command <" + names[0] + "> " + commandClass);
 
                 cli.out().print("[");
+                boolean first = true;
                 for (String name : names) {
-                    System.out.print(name + ", ");
+                    if (first) first = false;
+                    else cli.out().print(", ");
+                    cli.out().print(name);
                     commandMap.put(name, commandClass);
                 }
                 cli.out().print("]");

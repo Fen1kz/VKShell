@@ -11,8 +11,6 @@ public interface ICommandParser {
 
     public IParsedCommand parseCommand(final Class<? extends ICommand> commandclass, final String inputline);
 
-    public ICommand getCommandInstance(Class<? extends ICommand> value);
-
     public Class<? extends ICommand> findCommandClass(IAppModeWithCommands selectCommandMode, String inputline) throws UnknownCommandException;
 
     public static interface IParsedCommand<T extends ICommand> {

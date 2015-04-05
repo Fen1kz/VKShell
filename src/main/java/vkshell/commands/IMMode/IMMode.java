@@ -1,6 +1,5 @@
 package vkshell.commands.IMMode;
 
-import vkshell.main.cli.ICLI;
 import vkshell.appmodes.SubMode;
 
 public class IMMode extends SubMode {

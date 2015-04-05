@@ -4,12 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.appmodes.SelectCommandMode;
 import vkshell.appmodes.interfaces.IAppModeWithCommands;
 import vkshell.commands.core.CommandArgs;
 import vkshell.commands.core.ICommand;
 import vkshell.commands.core.Option;
 import vkshell.commands.core.exceptions.UnknownCommandException;
+import vkshell.shell.cmd.tools.interfaces.ICommandFactory;
 import vkshell.shell.cmd.tools.interfaces.ICommandParser;
 
 import java.util.*;
@@ -24,6 +26,9 @@ public class CommandParser implements ICommandParser {
     private static final Logger logger = LogManager.getLogger(CommandParser.class);
     private static final Marker FINDING_OPTION = MarkerManager.getMarker("OPTIONS");
 
+    @Autowired
+    protected ICommandFactory commandFactory;
+
     @Override
     public IParsedCommand parseCommand(IAppModeWithCommands mode, String input) throws UnknownCommandException {
         ParsedData data = new ParsedData(input);
@@ -34,7 +39,7 @@ public class CommandParser implements ICommandParser {
     @Override
     public IParsedCommand parseCommand(Class<? extends ICommand> commandclass, String inputline) {
         ParsedCommand parsedCommand = new ParsedCommand();
-        parsedCommand.command = getCommandInstance(commandclass);
+        parsedCommand.command = commandFactory.getCommandInstance(commandclass);
         List<String> arguments = new ArrayList<>();
 
         logger.trace("Parsing command <{}> with <{}>", commandclass, inputline);
@@ -104,17 +109,6 @@ public class CommandParser implements ICommandParser {
             }
         }
         return list;
-    }
-
-    @Override
-    public ICommand getCommandInstance(Class<? extends ICommand> commandclass) {
-        ICommand cmd = null;
-        try {
-            cmd = commandclass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return cmd;
     }
 
     @Override

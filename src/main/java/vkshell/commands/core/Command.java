@@ -1,11 +1,13 @@
 package vkshell.commands.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import vkshell.main.cli.ICLI;
+import org.springframework.beans.factory.annotation.Configurable;
+import vkshell.shell.cli.ICLI;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Configurable("command")
 public abstract class Command implements ICommand {
     @Autowired
     protected ICLI cli;

@@ -1,11 +1,8 @@
 package vkshell.commands.core;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.api.VkAPI;
 import vkshell.api.exceptions.VKAPIException;
-import vkshell.main.cli.ICLI;
 
 public abstract class VKApiCommand extends Command {
     @AOption(names = {"debug", "r"}, desc = "shows raw debug")

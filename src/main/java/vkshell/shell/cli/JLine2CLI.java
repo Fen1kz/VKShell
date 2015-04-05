@@ -1,4 +1,4 @@
-package vkshell.main.cli;
+package vkshell.shell.cli;
 
 import jline.TerminalFactory;
 import jline.console.ConsoleReader;
@@ -7,22 +7,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-public class CLI implements ICLI {
+public class JLine2CLI implements ICLI {
     public boolean echo = false;
     private ConsoleReader console;
 
     private InputStream in;
     private PrintStream out;
 
-    public CLI() {
+    public JLine2CLI() {
         this(System.in, System.out);
     }
 
-    public CLI(InputStream in) {
+    public JLine2CLI(InputStream in) {
         this(in, System.out);
     }
 
-    public CLI(InputStream in, PrintStream out) {
+    public JLine2CLI(InputStream in, PrintStream out) {
         this.in = in;
         this.out = out;
         TerminalFactory.configure(TerminalFactory.UNIX); // for IDEA console o_O

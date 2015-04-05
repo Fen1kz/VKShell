@@ -1,6 +1,5 @@
 package vkshell.commands.AudioMode;
 
-import vkshell.main.cli.ICLI;
 import vkshell.appmodes.SubMode;
 
 public class AudioMode extends SubMode {

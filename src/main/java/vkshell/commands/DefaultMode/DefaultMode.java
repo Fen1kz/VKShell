@@ -1,13 +1,17 @@
 package vkshell.commands.DefaultMode;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import vkshell.appmodes.AppModeWithCommands;
 
 import vkshell.commands.core.ICommand;
-import vkshell.main.cli.ICLI;
+import vkshell.shell.cmd.tools.interfaces.ICommandFactory;
 
 import java.util.*;
 
 public class DefaultMode extends AppModeWithCommands {
+    @Autowired
+    protected ICommandFactory commandFactory;
+
     @Override
     protected void init() {
         super.init();
@@ -36,7 +40,7 @@ public class DefaultMode extends AppModeWithCommands {
 
         System.out.println("------ CLI Command Listing ------");
         for (Class<? extends ICommand> value : set) {
-            ICommand cmdObj = commandParser.getCommandInstance(value);
+            ICommand cmdObj = commandFactory.getCommandInstance(value);
             String[] names = cmdObj.getNames();
             System.out.print(++cmdIndex + ") ");
             System.out.print(names[0]);

@@ -1,4 +1,4 @@
-package vkshell.main.cli;
+package vkshell.shell.cli;
 
 import java.io.IOException;
 import java.io.PrintStream;

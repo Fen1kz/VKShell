@@ -1,7 +1,6 @@
 package vkshell.appmodes;
 
 import vkshell.commands.Global.BackCmd;
-import vkshell.main.cli.ICLI;
 
 public abstract class SubMode extends AppModeWithCommands {
     @Override

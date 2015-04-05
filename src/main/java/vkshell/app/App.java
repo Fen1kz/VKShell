@@ -6,7 +6,7 @@
 //import vkshell.api.auth.VkAccessToken;
 //import vkshell.commands.DefaultMode.AuthCmd;
 //
-//import vkshell.main.cli.ICLI;
+//import ICLI;
 //import vkshell.commands.DefaultMode.DefaultMode;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;

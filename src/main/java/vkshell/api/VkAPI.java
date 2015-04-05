@@ -10,7 +10,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import vkshell.app.Config;
 import vkshell.commands.DefaultMode.AuthCmd;
-import vkshell.main.cli.ICLI;
+import vkshell.shell.cli.ICLI;
 
 import java.io.File;
 import java.io.FileInputStream;

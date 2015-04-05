@@ -8,7 +8,7 @@
 //import vkshell.commands.Global.EchoCmd;
 //
 //import vkshell.commands.DefaultMode.DefaultMode;
-//import vkshell.main.cli.ICLI;
+//import ICLI;
 //
 //import java.io.*;
 //

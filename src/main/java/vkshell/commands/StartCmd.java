@@ -12,6 +12,7 @@ public class StartCmd extends Command {
 
     @Override
     protected void action(CommandArgs args) {
+
         new DefaultMode().start();
     }
 }

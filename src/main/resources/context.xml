@@ -7,12 +7,12 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="vkshell"/>
+    <!--<context:component-scan base-package="vkshell"/>-->
 
+    <bean id="startMode" class="vkshell.commands.DefaultMode.DefaultMode" init-method="init"></bean>
     <bean id="CommandParser" class="vkshell.shell.cmd.tools.CommandParser"></bean>
-    <bean id="CommandLineInterface" class="vkshell.main.cli.JLine2CLI">
-        <property name="in">
-            <value type="java.io.InputStream">System.in</value>
-        </property>
-    </bean>
+    <bean id="CommandFactory" class="vkshell.shell.cmd.tools.CommandFactory"></bean>
+
+    <bean id="appmode" scope="prototype"></bean>
+    <bean id="command" scope="prototype"></bean>
 </beans>

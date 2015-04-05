@@ -1,8 +1,8 @@
 package misc;
 
 import vkshell.app.App;
-import vkshell.main.cli.CLI;
-import vkshell.main.cli.ICLI;
+import vkshell.shell.cli.DefaultCLI;
+import vkshell.shell.cli.ICLI;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -28,7 +28,7 @@ public class CLITest {
         test.writeLine("audio");
         test.writeLine("list -l 3");
 
-        ICLI cli = new CLI(new ByteArrayInputStream(test.get().getBytes(StandardCharsets.UTF_8)));
+        ICLI cli = new DefaultCLI(new ByteArrayInputStream(test.get().getBytes(StandardCharsets.UTF_8)));
         cli.setEcho(true);
         App.get().start(cli);
     }
